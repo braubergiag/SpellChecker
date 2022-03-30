@@ -1,8 +1,11 @@
 #include <iostream>
-
+#include "SpellChecker.h"
 
 
 int main(){
-    std::cout << "Hello" << std::endl;
+    SpellChecker spellChecker{};
+    spellChecker.InitDictionary();
+    spellChecker.PrintDictionary();
+
     return 0;
 }
