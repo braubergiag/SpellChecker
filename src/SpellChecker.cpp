@@ -108,6 +108,7 @@ void SpellChecker::Run() {
                             continue;
                         }
                         Replace(possibleWords);
+                        continue;
 
                     }
                     case RequestType::STOP: {
