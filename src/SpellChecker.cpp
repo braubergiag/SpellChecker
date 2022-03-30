@@ -123,7 +123,7 @@ void SpellChecker::Run() {
             editedText_.push_back(word);
         }
     }
-    WriteToFile("../out.txt");
+    WriteToFile("out.txt");
 }
 bool SpellChecker::CheckRequestType(int commandNumber) const {
     if (commandNumber < 0 || commandNumber >= static_cast<int>(RequestType::REQUEST_COUNT)) {
