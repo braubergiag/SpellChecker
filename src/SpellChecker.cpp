@@ -62,9 +62,103 @@ void SpellChecker::ReadFile(const std::string &path) {
                            s.end(),
                            s.begin(),
                            [] (unsigned char c) { return std::tolower(c); });
-           textWords_.insert(s);
+           inputText_.push_back(s);
         }
     }
     infile.close();
+
+}
+
+void SpellChecker::Run() {
+
+    for (auto & word : inputText_) {
+        if (dictionary_.count(word) == 0) {
+            std::vector<std::string> possibleWords;
+            for (const auto &dictWord : dictionary_) {
+                if (GetDistance(word, word.size(), dictWord, dictWord.size()) == 1) {
+                    possibleWords.push_back(dictWord);
+
+                }
+
+            }
+            std::string command;
+            int commandNumber = 0;
+                std::cout << "Current word: " + word + "\n" + GenerateHelp();
+                commandNumber = InputIntNumber({"Enter your choice (option number): "},
+                                               {"Enter your choice as a whole number: "});
+                RequestType requestType;
+                if (CheckRequestType(commandNumber)) {
+                    requestType = static_cast<RequestType>(commandNumber);
+                } else {
+                    std::cout << "Incorrect command \n";
+                    continue;
+                }
+
+                switch (requestType) {
+                    case RequestType::KEEP:
+                        editedText_.push_back(word);
+                        continue;
+                    case RequestType::ADD:
+                        dictionary_.insert(word);
+                        editedText_.push_back(word);
+                        continue;
+                    case RequestType::REPLACE: {
+                        if (possibleWords.size() == 0) {
+                            std::cout << "No possible replacements\n";
+                            continue;
+                        }
+                        int counter = 0;
+                        for (const auto& replWord : possibleWords) {
+                            std:: cout << ++counter  << ". " + replWord << "\n";
+                        }
+                        int choiceWord = InputIntNumber("Enter number of word you want to take: ", "Enter the thole number: ");
+                        editedText_.push_back(possibleWords.at(choiceWord - 1));
+                    }
+                    default:
+                        break;
+
+
+
+                }
+
+
+        } else {
+            editedText_.push_back(word);
+        }
+    }
+}
+bool SpellChecker::CheckRequestType(int commandNumber) const {
+    if (commandNumber < 0 || commandNumber >= static_cast<int>(RequestType::REQUEST_COUNT)) {
+        return false;
+    }
+    return true;
+}
+int SpellChecker::InputIntNumber(const std::string &hint, const std::string &errorHint) const {
+    std::string input;
+    bool isOk = false;
+    int number;
+    std::cout << hint;
+    std::cin >> input;
+    while (!isOk){
+        try {
+            number = std::stoi(input);
+            isOk = true;
+        } catch (std::invalid_argument const& ex) {
+            std::cout << errorHint;
+            std::cin >> input;
+        }
+    }
+    return number;
+}
+std::string SpellChecker::GenerateHelp() const {
+    std::string help = {};
+    help += "1. Leave the word unchanged \n";
+    help += "2. Add word to dictionary AS IS \n";
+    help += "3. Show possibles replacements \n";
+    return help;
+}
+
+void SpellChecker::WriteToFile(const std::string &path) {
+    
 
 }

@@ -9,6 +9,7 @@ int main(){
     spellChecker.PrintDictionary();
 
     spellChecker.ReadFile(path);
+    spellChecker.Run();
 
     return 0;
 }
