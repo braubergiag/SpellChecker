@@ -3,7 +3,7 @@
 
 void SpellChecker::InitDictionary(const std::string &path) {
     std::ifstream infile;
-    infile.open ("../dictionary.txt");
+    infile.open (path);
     while (infile)
     {
         std::string s;
