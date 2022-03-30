@@ -3,12 +3,15 @@
 
 
 int main(){
-    std::string path = "../text.txt";
-    SpellChecker spellChecker{};
-    spellChecker.InitDictionary();
-    spellChecker.PrintDictionary();
+    std::string path,pathToDictionary = "../dictionary.txt", pathToSourceDir = "../";
 
-    spellChecker.ReadFile(path);
+    std::cout << "Enter the name of a text file [test file - text.txt]: ";
+    std::cin >> path;
+
+
+    SpellChecker spellChecker;
+    spellChecker.InitDictionary(pathToDictionary);
+    spellChecker.ReadFile(pathToSourceDir + path);
     spellChecker.Run();
 
     return 0;

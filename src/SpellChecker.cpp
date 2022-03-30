@@ -1,7 +1,7 @@
 
 #include "SpellChecker.h"
 
-void SpellChecker::InitDictionary() {
+void SpellChecker::InitDictionary(const std::string &path) {
     std::ifstream infile;
     infile.open ("../dictionary.txt");
     while (infile)
@@ -83,7 +83,7 @@ void SpellChecker::Run() {
             }
             std::string command;
             int commandNumber = 0;
-                std::cout << "Current word: " + word + "\n" + GenerateHelp();
+                std::cout << "Current word: " + word + "\n" + GenerateHelp(possibleWords.size() > 0);
                 commandNumber = InputIntNumber({"Enter your choice (option number): "},
                                                {"Enter your choice as a whole number: "});
                 RequestType requestType;
@@ -107,18 +107,11 @@ void SpellChecker::Run() {
                             std::cout << "No possible replacements\n";
                             continue;
                         }
-                        int counter = 0;
-                        for (const auto& replWord : possibleWords) {
-                            std:: cout << ++counter  << ". " + replWord << "\n";
-                        }
-                        int choiceWord = InputIntNumber("Enter number of word you want to take: ", "Enter the thole number: ");
-                        editedText_.push_back(possibleWords.at(choiceWord - 1));
+                        Replace(possibleWords);
+
                     }
                     default:
                         break;
-
-
-
                 }
 
 
@@ -126,6 +119,7 @@ void SpellChecker::Run() {
             editedText_.push_back(word);
         }
     }
+    WriteToFile("../out.txt");
 }
 bool SpellChecker::CheckRequestType(int commandNumber) const {
     if (commandNumber < 0 || commandNumber >= static_cast<int>(RequestType::REQUEST_COUNT)) {
@@ -150,15 +144,44 @@ int SpellChecker::InputIntNumber(const std::string &hint, const std::string &err
     }
     return number;
 }
-std::string SpellChecker::GenerateHelp() const {
+std::string SpellChecker::GenerateHelp(bool replaceOption) const {
     std::string help = {};
     help += "1. Leave the word unchanged \n";
     help += "2. Add word to dictionary AS IS \n";
-    help += "3. Show possibles replacements \n";
+    if (replaceOption) {
+        help += "3. Show possibles replacements \n";
+    }
+
     return help;
 }
 
 void SpellChecker::WriteToFile(const std::string &path) {
-    
+    std::ofstream out (path , std::ios::out);
+    if (out.is_open())
+    {
+        for (const auto & word : editedText_) {
+            out << word << " ";
+        }
+        out.close();
+    }
 
 }
+
+void SpellChecker::SetInputPath(const std::string &path) {
+    inputPath_ = path;
+
+}
+
+SpellChecker::SpellChecker() {
+
+}
+
+void SpellChecker::Replace(const std::vector<std::string> possibleWords) {
+    int counter = 0;
+    for (const auto& replWord : possibleWords) {
+        std:: cout << ++counter  << ". " + replWord << "\n";
+    }
+    int choiceWord = InputIntNumber("Enter number of word you want to take: ", "Enter the thole number: ");
+    editedText_.push_back(possibleWords.at(choiceWord - 1));
+}
+
