@@ -16,11 +16,13 @@ public:
     SpellChecker() {};
 
     int GetDistance(const std::string &word_1,size_t s_1, const std::string &word_2,size_t s_2);
+    void ReadFile(const std::string & path);
     void InitDictionary();
     void PrintDictionary();
 
 private:
     std::set<std::string> dictionary_;
+    std::set<std::string> textWords_;
 };
 
 
