@@ -110,6 +110,9 @@ void SpellChecker::Run() {
                         Replace(possibleWords);
 
                     }
+                    case RequestType::STOP: {
+                        return;
+                    }
                     default:
                         break;
                 }
@@ -151,6 +154,7 @@ std::string SpellChecker::GenerateHelp(bool replaceOption) const {
     if (replaceOption) {
         help += "3. Show possibles replacements \n";
     }
+    help += "0. Quit \n";
 
     return help;
 }
