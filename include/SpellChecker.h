@@ -10,10 +10,12 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 class SpellChecker {
 public:
     SpellChecker() {};
-    
+
+    int GetDistance(const std::string &word_1,size_t s_1, const std::string &word_2,size_t s_2);
     void InitDictionary();
     void PrintDictionary();
 
